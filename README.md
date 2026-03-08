@@ -18,10 +18,10 @@ A rule-based expert system that analyzes email content and metadata to determine
 ```
 phishing-expert-system/
 │
-├── [README.md](README.md)
-├── [LICENSE](LICENSE)
+├── README.md
+├── LICENSE
 ├── .gitignore
-├── [requirements.txt](requirements.txt)
+├── requirements.txt
 │
 ├── src/
 │   ├── main.py              # Entry point
