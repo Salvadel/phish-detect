@@ -24,25 +24,25 @@ phishing-expert-system/
 ├── requirements.txt
 │
 ├── src/
-│   ├── main.py              # Entry point
-│   ├── rules.py             # IF/THEN expert system rules
-│   ├── engine.py            # Experta inference engine setup
-│   └── email_parser.py      # Extracts features from raw emails
+│   ├── main.py             
+│   ├── rules.py             
+│   ├── engine.py            
+│   └── email_parser.py      
 │
 ├── data/
-│   ├── phishing_samples/    # Sample phishing emails for testing
-│   └── legit_samples/       # Legitimate emails for comparison
+│   ├── phishing_samples/   
+│   └── legit_samples/      
 │
 ├── docs/
-│   ├── ontology.md          # Full ontology write-up
+│   ├── ontology.md          
 │   ├── competency_questions.md
-│   └── diagrams/            # Architecture + hierarchy diagrams
+│   └── diagrams/           
 │
 ├── report/
 │   └── CS455_Final_Report.pdf
 │
 └── tests/
-    └── test_rules.py        # Unit tests for individual rules
+    └── test_rules.py        
 ```
 
 > 📁 [`src/`](src/) &nbsp;·&nbsp;&nbsp;[`data/`](data/) &nbsp;·&nbsp;[`docs/`](docs/)&nbsp;·&nbsp;[`report/`](report/)&nbsp;·&nbsp;[`tests/`](tests/)&nbsp;
