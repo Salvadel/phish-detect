@@ -49,7 +49,7 @@ phishing-expert-system/
 
 ## How to Run
 
-No Python installation required. Download the pre-built executable for your operating system from the [Releases](https://github.com/YOURUSERNAME/phishing-expert-system/releases/latest) tab.
+No Python installation required. Download the pre-built executable for your operating system from the [Releases](https://github.com/salvas/phishing-expert-system/releases/latest) tab.
 
 | Operating System | File to download |
 |-----------------|-----------------|
