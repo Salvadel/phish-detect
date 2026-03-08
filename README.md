@@ -71,22 +71,6 @@ chmod +x PhishDetect
 ./PhishDetect
 ```
 
-> **Note:** On Mac, if you see a security warning, go to **System Settings → Privacy & Security** and click **Open Anyway**.
-
-## Example Output
-
-```
-=== Phishing Expert System ===
-Analyzing: sample1.eml
-
-Rules fired:
-  [HIGH]   Mismatched sender domain and display name
-  [HIGH]   Urgency language detected in the subject
-  [MEDIUM] Suspicious URL detected in body
-
-Verdict: PHISHING (confidence: HIGH)
-```
-
 ## Dependencies
 
 See [`requirements.txt`](requirements.txt) for the full list. Key libraries:
