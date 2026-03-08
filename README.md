@@ -58,12 +58,12 @@ No Python installation required. Download the pre-built executable for your oper
 
 ### Windows
 
-1. Download `PhishDetect.exe` from the [Releases](https://github.com/YOURUSERNAME/phishing-expert-system/releases/latest) tab
+1. Download `PhishDetect.exe` from the [Releases](https://github.com/salvadel/phishing-expert-system/releases/latest) tab
 2. Double-click `PhishDetect.exe` to run
 
 ### Mac / Linux
 
-1. Download `PhishDetect` from the [Releases](https://github.com/YOURUSERNAME/phishing-expert-system/releases/latest) tab
+1. Download `PhishDetect` from the [Releases](https://github.com/salvadel/phishing-expert-system/releases/latest) tab
 2. Open a terminal in the download folder and make it executable:
 
 ```bash
