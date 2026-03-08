@@ -1,7 +1,7 @@
 # Phishing Email Detection Expert System
 
-> CS 455 – Artificial Intelligence | Spring 2026  
-> Embry-Riddle Aeronautical University – Daytona Beach
+> CS 455 - Artificial Intelligence | Spring 2026  
+> Embry-Riddle Aeronautical University - Daytona Beach
 
 A rule-based expert system that analyzes email content and metadata to determine whether an email is likely a phishing attempt, legitimate, or uncertain.
 
@@ -81,7 +81,7 @@ Analyzing: sample1.eml
 
 Rules fired:
   [HIGH]   Mismatched sender domain and display name
-  [HIGH]   Urgency language detected in subject
+  [HIGH]   Urgency language detected in the subject
   [MEDIUM] Suspicious URL detected in body
 
 Verdict: PHISHING (confidence: HIGH)
