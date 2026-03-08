@@ -45,7 +45,7 @@ phishing-expert-system/
     └── test_rules.py        # Unit tests for individual rules
 ```
 
-> 📁 [`src/`](src/) &nbsp;·&nbsp; [`docs/`](docs/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`tests/`](tests/) &nbsp;·&nbsp; [`report/`](report/)
+> 📁 [`src/`](src/) &nbsp;·&nbsp;&nbsp; [`data/`](data/) &nbsp;·[`docs/`](docs/) &nbsp;·&nbsp; [`tests/`](tests/) &nbsp;·&nbsp; [`report/`](report/)
 
 ## How to Run
 
