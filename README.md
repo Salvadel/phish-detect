@@ -10,7 +10,7 @@ A rule-based expert system that analyzes email content and metadata to determine
 | Name | GitHub Handle |
 |------|--------------|
 | Salvatore DeLuca | @salvadel |
-| Devin Catledge | @(your handle) |
+| Devin Catledge | @cadetpenguin359 |
 | Logan Velvet | @(your handle) |
 
 ## Project Structure
