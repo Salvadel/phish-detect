@@ -8,9 +8,9 @@ A machine learning classifier that analyzes email content to determine the likel
 
 | Name | GitHub Handle |
 |------|--------------|
-| Salvatore DeLuca | @(your handle) |
-| Devin Catledge | @(your handle) |
-| Logan Velvet | @(your handle) |
+| Salvatore DeLuca | @Salvas |
+| Devin Catledge | @cadetpenguin359 |
+| Logan Velvet | @LoganVelvet |
 
 ## What It Does
 
