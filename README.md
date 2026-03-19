@@ -1,13 +1,8 @@
 # PhishDetect
 
-> CS 455 – Artificial Intelligence | Spring 2026  
-> Embry-Riddle Aeronautical University – Daytona Beach
-
-A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
+A machine learning classifier that analyzes email content to determine the likelihood it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
  
 **Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
-
----
 
 ## Team Members
 
@@ -17,13 +12,9 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 | Devin Catledge | @(your handle) |
 | Logan Velvet | @(your handle) |
 
----
-
 ## What It Does
 
 PhishDetect takes a pasted email, extracts a set of features (URLs, sender analysis, keyword signals), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
-
----
 
 ## Project Structure
 
@@ -58,7 +49,7 @@ phish-detect/
     └── test_classifier.py       # Basic classifier tests
 ```
 
-[`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`docs/`](docs/) &nbsp;·&nbsp; [`report/`](report/)
+> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`docs/`](docs/) &nbsp;·&nbsp; [`report/`](report/)
 
 ---
 
@@ -88,8 +79,6 @@ chmod +x PhishDetect
 
 > **Note:** On Mac, if you see a security warning, go to **System Settings → Privacy & Security** and click **Open Anyway**.
 
----
-
 ## Example Output
 
 ```
@@ -108,8 +97,6 @@ Top signals detected:
 Confidence: 87% — Verdict: PHISHING
 ```
 
----
-
 ## Limitations
 
 As a proof of concept, PhishDetect has known limitations:
@@ -118,8 +105,6 @@ As a proof of concept, PhishDetect has known limitations:
 - VirusTotal API requires an internet connection and a free API key
 - Not tested against adversarial inputs or obfuscated phishing content
 - Copy-paste only — does not parse .eml files or connect to email clients
-
----
 
 ## Dependencies
 
@@ -130,14 +115,10 @@ See [`requirements.txt`](requirements.txt) for the full list. Key libraries:
 - [`python-dotenv`](https://pypi.org/project/python-dotenv/) — API key management
 - [`pytest`](https://docs.pytest.org/en/stable/) — unit testing
 
----
-
 ## Documentation
 
 - [`docs/diagrams/`](docs/diagrams/) — Architecture and pipeline diagrams
 - [`report/CS455_Final_Report.pdf`](report/CS455_Final_Report.pdf) — Final project report
-
----
 
 ## License
 
