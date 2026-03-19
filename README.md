@@ -1,8 +1,10 @@
 # PhishDetect
 
-A machine learning classifier that analyzes email content to determine the likelihood it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
- 
-**Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
+A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
+
+> **Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
+
+---
 
 ## Team Members
 
@@ -14,7 +16,7 @@ A machine learning classifier that analyzes email content to determine the likel
 
 ## What It Does
 
-PhishDetect takes a pasted email, extracts a set of features (URLs, sender analysis, keyword signals), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
+PhishDetect takes a pasted email, extracts a small set of features (URL count, urgency keywords, sender signals), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
 
 ## Project Structure
 
@@ -27,57 +29,65 @@ phish-detect/
 ├── requirements.txt
 │
 ├── src/
-│   ├── main.py                  # Entry point
-│   ├── email_parser.py          # Extracts raw features from email text
-│   ├── feature_extractor.py     # Converts features into ML input vector
-│   └── model.py                 # Loads trained model, runs prediction
+│   ├── main.py          # Entry point — parsing, feature extraction, prediction
+│   └── train.py         # One-time training script, generates phishdetect.pkl
 │
 ├── data/
-│   ├── phishing_samples/        # Sample phishing emails for testing
-│   └── legit_samples/           # Legitimate emails for comparison
+│   └── emails.csv       # ~60 labeled emails (0 = legitimate, 1 = phishing)
 │
 ├── models/
-│   └── phishdetect.pkl          # Trained Random Forest model
-│
-├── docs/
-│   └── diagrams/                # Architecture diagrams
+│   └── phishdetect.pkl  # Trained Random Forest model
 │
 ├── report/
 │   └── CS455_Final_Report.pdf
 │
 └── tests/
-    └── test_classifier.py       # Basic classifier tests
+    └── test_classifier.py
 ```
 
-> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`docs/`](docs/) &nbsp;·&nbsp; [`report/`](report/)
-
----
+> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`report/`](report/)
 
 ## How to Run
 
-No Python installation required. Download the pre-built executable for your operating system from the [Releases](https://github.com/YOURUSERNAME/phish-detect/releases/latest) tab.
+### Prerequisites
 
-| Operating System | File to download |
-|-----------------|-----------------|
-| Windows | `PhishDetect.exe` |
-| Mac / Linux | `PhishDetect` |
+- Python 3.10 or higher
+- pip
 
-### Windows
-
-1. Download `PhishDetect.exe` from the [Releases](https://github.com/YOURUSERNAME/phish-detect/releases/latest) tab
-2. Double-click `PhishDetect.exe` to run
-
-### Mac / Linux
-
-1. Download `PhishDetect` from the [Releases](https://github.com/YOURUSERNAME/phish-detect/releases/latest) tab
-2. Open a terminal in the download folder and make it executable:
+### 1. Clone the repository
 
 ```bash
-chmod +x PhishDetect
-./PhishDetect
+git clone https://github.com/YOURUSERNAME/phish-detect.git
+cd phish-detect
 ```
 
-> **Note:** On Mac, if you see a security warning, go to **System Settings → Privacy & Security** and click **Open Anyway**.
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Train the model (run once)
+
+```bash
+python src/train.py
+```
+
+This reads [`data/emails.csv`](data/emails.csv), trains the classifier, and saves the model to `models/phishdetect.pkl`.
+
+### 4. Run PhishDetect
+
+```bash
+python src/main.py
+```
+
+Paste your email content when prompted, type `END` on a new line, and the classifier will return a verdict.
+
+### 5. Run tests
+
+```bash
+pytest tests/
+```
 
 ## Example Output
 
@@ -85,40 +95,51 @@ chmod +x PhishDetect
 === PhishDetect ===
 Paste email content below (type END on a new line when done):
 
-...
+Dear user, your account will be suspended. Click here to verify immediately.
+END
 
-Analyzing email...
+Analyzing...
 
-Top signals detected:
+Signals detected:
+  · Urgency keywords found
+  · Suspicious URL count: 2
   · Sender domain mismatch
-  · Urgency keywords found in body
-  · Suspicious URL flagged by VirusTotal
 
 Confidence: 87% — Verdict: PHISHING
 ```
+
+## Features Used by the Classifier
+
+The model is trained on 8 hand-engineered features extracted from raw email text:
+
+| Feature | Description |
+|---------|-------------|
+| `contains_urgency_keywords` | Words like "urgent", "suspended", "immediately" |
+| `contains_credential_keywords` | Words like "password", "verify", "login" |
+| `url_count` | Number of URLs found in the email body |
+| `has_suspicious_tld` | URLs using unusual top-level domains |
+| `sender_domain_mismatch` | Display name domain differs from sender domain |
+| `has_ip_address_url` | URL uses a raw IP instead of a domain name |
+| `exclamation_mark_count` | Number of exclamation marks in the body |
+| `contains_threat_keywords` | Words like "terminated", "legal action", "suspended" |
 
 ## Limitations
 
 As a proof of concept, PhishDetect has known limitations:
 
-- Trained on a small dataset — accuracy may degrade on unusual phishing styles
-- VirusTotal API requires an internet connection and a free API key
-- Not tested against adversarial inputs or obfuscated phishing content
-- Copy-paste only — does not parse .eml files or connect to email clients
+- Trained on ~60 emails — accuracy will vary on real-world volume
+- No live URL scanning — relies purely on structural and keyword features
+- Copy-paste input only — does not connect to email clients or parse .eml files
+- Not tested against adversarial or obfuscated phishing content
 
 ## Dependencies
 
 See [`requirements.txt`](requirements.txt) for the full list. Key libraries:
 
 - [`scikit-learn`](https://scikit-learn.org/) — Random Forest classifier
-- [`requests`](https://docs.python-requests.org/) — VirusTotal API calls
-- [`python-dotenv`](https://pypi.org/project/python-dotenv/) — API key management
+- [`pandas`](https://pandas.pydata.org/) — dataset loading and manipulation
+- [`joblib`](https://joblib.readthedocs.io/) — saving and loading the trained model
 - [`pytest`](https://docs.pytest.org/en/stable/) — unit testing
-
-## Documentation
-
-- [`docs/diagrams/`](docs/diagrams/) — Architecture and pipeline diagrams
-- [`report/CS455_Final_Report.pdf`](report/CS455_Final_Report.pdf) — Final project report
 
 ## License
 
