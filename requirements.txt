@@ -1,1 +1,17 @@
-#temp file for requirements for running the program
+# PhishDetect - requirements.txt
+ 
+# Machine Learning
+scikit-learn==1.4.2
+numpy==1.26.4
+pandas==2.2.2
+joblib==1.4.2
+ 
+# VirusTotal API
+requests==2.31.0
+ 
+# Environment / API key management
+python-dotenv==1.0.1
+ 
+# Testing
+pytest==8.2.0
+ 
