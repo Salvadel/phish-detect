@@ -49,14 +49,9 @@ phish-detect/
 │   ├── emails.csv               # 100 labeled training emails
 │   ├── evaluation_emails.csv    # 30 held-out evaluation emails
 │   ├── evaluation_results.csv   # Results from evaluate.py
-│   ├── Nazario.csv              # Source: verified phishing emails
-│   └── Enron.csv                # Source: legitimate business emails
 │
 ├── models/
 │   └── phishdetect.pkl  # Trained Random Forest model
-│
-├── report/
-│   └── CS455_Final_Report.pdf
 │
 └── tests/
     └── test_classifier.py   # 23 unit tests - all passing
