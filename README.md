@@ -1,10 +1,11 @@
 # PhishDetect
 
-A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
+> CS 455 – Artificial Intelligence | Spring 2026
+> Embry-Riddle Aeronautical University – Daytona Beach
 
-> **Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
+A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood that it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
 
----
+>**Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
 
 ## Team Members
 
@@ -13,10 +14,21 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 | Salvatore DeLuca | @Salvas |
 | Devin Catledge | @cadetpenguin359 |
 | Logan Velvet | @LoganVelvet |
-
 ## What It Does
 
-PhishDetect takes a pasted email, extracts a small set of features (URL count, urgency keywords, sender signals), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
+PhishDetect takes a pasted email, extracts a set of features (urgency keywords, credential signals, URL patterns), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
+
+## Results
+
+| Metric | Score |
+|--------|-------|
+| Training Accuracy | 70.0% |
+| Evaluation Accuracy | 90.0% |
+| Precision | 1.00 |
+| Recall | 0.82 |
+| F1 Score | 0.90 |
+
+Evaluated against 30 emails entirely separate from the training dataset. Zero false positives - no legitimate emails were incorrectly flagged as phishing.
 
 ## Project Structure
 
@@ -29,11 +41,16 @@ phish-detect/
 ├── requirements.txt
 │
 ├── src/
-│   ├── main.py          # Entry point — parsing, feature extraction, prediction
-│   └── train.py         # One-time training script, generates phishdetect.pkl
+│   ├── main.py          # Entry point - feature extraction and prediction
+│   ├── train.py         # One-time training script, generates phishdetect.pkl
+│   └── evaluate.py      # Runs evaluation against held-out test emails
 │
 ├── data/
-│   └── emails.csv       # ~60 labeled emails (0 = legitimate, 1 = phishing)
+│   ├── emails.csv               # 100 labeled training emails
+│   ├── evaluation_emails.csv    # 30 held-out evaluation emails
+│   ├── evaluation_results.csv   # Results from evaluate.py
+│   ├── Nazario.csv              # Source: verified phishing emails
+│   └── Enron.csv                # Source: legitimate business emails
 │
 ├── models/
 │   └── phishdetect.pkl  # Trained Random Forest model
@@ -42,7 +59,7 @@ phish-detect/
 │   └── CS455_Final_Report.pdf
 │
 └── tests/
-    └── test_classifier.py
+    └── test_classifier.py   # 23 unit tests - all passing
 ```
 
 > [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`report/`](report/)
@@ -73,7 +90,7 @@ pip install -r requirements.txt
 python src/train.py
 ```
 
-This reads [`data/emails.csv`](data/emails.csv), trains the classifier, and saves the model to `models/phishdetect.pkl`.
+Reads [`data/emails.csv`](data/emails.csv), trains the classifier, and saves the model to `models/phishdetect.pkl`.
 
 ### 4. Run PhishDetect
 
@@ -83,10 +100,18 @@ python src/main.py
 
 Paste your email content when prompted, type `END` on a new line, and the classifier will return a verdict.
 
-### 5. Run tests
+### 5. Run evaluation
 
 ```bash
-pytest tests/
+python src/evaluate.py
+```
+
+Runs the model against [`data/evaluation_emails.csv`](data/evaluation_emails.csv) and prints accuracy, precision, recall, F1, and a confusion matrix.
+
+### 6. Run tests
+
+```bash
+pytest tests/test_classifier.py -v
 ```
 
 ## Example Output
@@ -102,10 +127,10 @@ Analyzing...
 
 Signals detected:
   · Urgency keywords found
-  · Suspicious URL count: 2
-  · Sender domain mismatch
+  · Credential keywords found
+  · Suspicious URL count: 1
 
-Confidence: 87% — Verdict: PHISHING
+Confidence: 87.0% - Verdict: PHISHING
 ```
 
 ## Features Used by the Classifier
@@ -114,32 +139,43 @@ The model is trained on 8 hand-engineered features extracted from raw email text
 
 | Feature | Description |
 |---------|-------------|
-| `contains_urgency_keywords` | Words like "urgent", "suspended", "immediately" |
-| `contains_credential_keywords` | Words like "password", "verify", "login" |
+| `urgency_keywords` | Words like "urgent", "suspended", "immediately" |
+| `credential_keywords` | Words like "password", "verify", "login" |
 | `url_count` | Number of URLs found in the email body |
-| `has_suspicious_tld` | URLs using unusual top-level domains |
-| `sender_domain_mismatch` | Display name domain differs from sender domain |
-| `has_ip_address_url` | URL uses a raw IP instead of a domain name |
-| `exclamation_mark_count` | Number of exclamation marks in the body |
-| `contains_threat_keywords` | Words like "terminated", "legal action", "suspended" |
+| `suspicious_tld` | URLs using unusual top-level domains (.xyz, .top etc.) |
+| `domain_mismatch` | Display name domain differs from sender domain |
+| `ip_address_url` | URL uses a raw IP instead of a domain name |
+| `exclamation_count` | Number of exclamation marks (capped at 3) |
+| `threat_keywords` | Words like "terminated", "legal action", "violation" |
+
+## Dataset
+
+Training and evaluation data sourced from two verified datasets:
+
+- **[Nazario Phishing Corpus](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset)** - verified real-world phishing emails
+- **[Enron Email Dataset](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset)** - legitimate business emails
+
+Training set: 100 emails (55 phishing, 45 legitimate)
+Evaluation set: 30 emails (15 phishing, 15 legitimate) - no overlap with training data
 
 ## Limitations
 
 As a proof of concept, PhishDetect has known limitations:
 
-- Trained on ~60 emails — accuracy will vary on real-world volume
-- No live URL scanning — relies purely on structural and keyword features
-- Copy-paste input only — does not connect to email clients or parse .eml files
+- Trained on 100 emails - accuracy will vary on real-world volume
+- No live URL scanning - relies purely on structural and keyword features
+- Copy-paste input only - does not connect to email clients or parse .eml files
 - Not tested against adversarial or obfuscated phishing content
+- May struggle with non-English emails or heavily obfuscated spam
 
 ## Dependencies
 
 See [`requirements.txt`](requirements.txt) for the full list. Key libraries:
 
-- [`scikit-learn`](https://scikit-learn.org/) — Random Forest classifier
-- [`pandas`](https://pandas.pydata.org/) — dataset loading and manipulation
-- [`joblib`](https://joblib.readthedocs.io/) — saving and loading the trained model
-- [`pytest`](https://docs.pytest.org/en/stable/) — unit testing
+- [`scikit-learn`](https://scikit-learn.org/) - Random Forest classifier
+- [`pandas`](https://pandas.pydata.org/) - dataset loading and manipulation
+- [`joblib`](https://joblib.readthedocs.io/) - saving and loading the trained model
+- [`pytest`](https://docs.pytest.org/en/stable/) - unit testing
 
 ## License
 
