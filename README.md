@@ -19,7 +19,7 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 
 PhishDetect takes a pasted email, extracts a set of features (urgency keywords, credential signals, URL patterns), and runs them through a trained Random Forest classifier. The model outputs a **calibrated confidence percentage** and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.  
 
-- The **UNCERTAIN** verdict is based on a probability range of **40–60%**, which can be adjusted for stricter or more lenient classifications.  
+- The **UNCERTAIN** verdict is based on a probability range of **41–60%**, which can be adjusted for stricter or more lenient classifications.  
 - The model uses **probability calibration** to produce more reliable confidence scores, improving evaluation consistency.
 
 ## Results
@@ -75,7 +75,7 @@ phish-detect/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOURUSERNAME/phish-detect.git
+git clone https://github.com/Salvas/phish-detect.git
 cd phish-detect
 ```
 
