@@ -1,6 +1,6 @@
 # PhishDetect
 
-> CS 455 – Artificial Intelligence | Spring 2026
+> CS 455 – Artificial Intelligence | Spring 2026  
 > Embry-Riddle Aeronautical University – Daytona Beach
 
 A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood that it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
@@ -14,21 +14,25 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 | Salvatore DeLuca | @Salvas |
 | Devin Catledge | @cadetpenguin359 |
 | Logan Velvet | @LoganVelvet |
+
 ## What It Does
 
-PhishDetect takes a pasted email, extracts a set of features (urgency keywords, credential signals, URL patterns), and runs them through a trained Random Forest classifier. It returns a confidence percentage and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.
+PhishDetect takes a pasted email, extracts a set of features (urgency keywords, credential signals, URL patterns), and runs them through a trained Random Forest classifier. The model outputs a **calibrated confidence percentage** and a verdict: **PHISHING**, **UNCERTAIN**, or **LEGITIMATE**.  
+
+- The **UNCERTAIN** verdict is based on a probability range of **40–60%**, which can be adjusted for stricter or more lenient classifications.  
+- The model uses **probability calibration** to produce more reliable confidence scores, improving evaluation consistency.
 
 ## Results
 
 | Metric | Score |
 |--------|-------|
 | Training Accuracy | 70.0% |
-| Evaluation Accuracy | 85.0% |
+| Evaluation Accuracy | 90.0% |
 | Precision | 1.00 |
 | Recall | 0.82 |
 | F1 Score | 0.90 |
 
-Evaluated against 30 emails entirely separate from the training dataset. 
+Evaluated against 30 emails entirely separate from the training dataset.  
 
 ## Project Structure
 
@@ -43,6 +47,7 @@ phish-detect/
 ├── src/
 │   ├── main.py          # Entry point - feature extraction and prediction
 │   ├── train.py         # One-time training script, generates phishdetect.pkl
+│   └── calibration.py   # Calibrates the Random Forest model
 │   └── evaluate.py      # Runs evaluation against held-out test emails
 │
 ├── data/
@@ -51,10 +56,11 @@ phish-detect/
 │   ├── evaluation_results.csv   # Results from evaluate.py
 │
 ├── models/
-│   └── phishdetect.pkl  # Trained Random Forest model
+│   └── phishdetect.pkl              # Trained Random Forest model
+│   └── phishdetect_calibrated.pkl   # Calibrated model
 │
 └── tests/
-    └── test_classifier.py   # 23 unit tests - all passing
+    └── test_classifier.py   # 23 feature tests - all passing
 ```
 
 > [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`report/`](report/)
@@ -87,15 +93,19 @@ python src/train.py
 
 Reads [`data/emails.csv`](data/emails.csv), trains the classifier, and saves the model to `models/phishdetect.pkl`.
 
-### 4. Run PhishDetect
+### 4. Calibrate the model (run once)
 
 ```bash
-python src/main.py
+python src/calibration.py
 ```
 
-Paste your email content when prompted, type `END` on a new line, and the classifier will return a verdict.
+### 5. Run tests
 
-### 5. Run evaluation
+```bash
+pytest tests/test_classifier.py -v
+```
+
+### 6. Run evaluation
 
 ```bash
 python src/evaluate.py
@@ -103,11 +113,13 @@ python src/evaluate.py
 
 Runs the model against [`data/evaluation_emails.csv`](data/evaluation_emails.csv) and prints accuracy, precision, recall, F1, and a confusion matrix.
 
-### 6. Run tests
+### 7. Run PhishDetect
 
 ```bash
-pytest tests/test_classifier.py -v
+python src/main.py
 ```
+
+Paste your email content when prompted, type `END` on a new line, and the classifier will return a verdict.
 
 ## Example Output
 
