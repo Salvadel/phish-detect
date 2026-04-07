@@ -4,6 +4,9 @@ CS 455 - Spring 2026
 
 Basic unit tests for the PhishDetect classifier.
 Tests cover feature extraction correctness and model prediction.
+
+Must be run with Pytest from the project root directory:
+    pytest tests/test-classifier.py
 """
 
 import os
@@ -88,27 +91,27 @@ class TestFeatureExtraction:
 class TestVerdictThresholds:
 
     def test_high_confidence_is_phishing(self):
-        """Confidence >= 70% should return PHISHING."""
-        assert get_verdict(0.70) == "PHISHING"
+        """Confidence >= 60% should return PHISHING."""
+        assert get_verdict(0.60) == "PHISHING"
         assert get_verdict(0.95) == "PHISHING"
 
     def test_medium_confidence_is_uncertain(self):
-        """Confidence between 40–69% should return UNCERTAIN."""
-        assert get_verdict(0.40) == "UNCERTAIN"
-        assert get_verdict(0.65) == "UNCERTAIN"
+        """Confidence between 41–59% should return UNCERTAIN."""
+        assert get_verdict(0.41) == "UNCERTAIN"
+        assert get_verdict(0.55) == "UNCERTAIN"
 
     def test_low_confidence_is_legitimate(self):
         """Confidence below 40% should return LEGITIMATE."""
         assert get_verdict(0.39) == "LEGITIMATE"
         assert get_verdict(0.10) == "LEGITIMATE"
 
-    def test_exact_boundary_70(self):
-        """Exactly 70% should be PHISHING not UNCERTAIN."""
-        assert get_verdict(0.70) == "PHISHING"
+    def test_exact_boundary_60(self):
+        """Exactly 60% should be PHISHING not UNCERTAIN."""
+        assert get_verdict(0.60) == "PHISHING"
 
     def test_exact_boundary_40(self):
-        """Exactly 40% should be UNCERTAIN not LEGITIMATE."""
-        assert get_verdict(0.40) == "UNCERTAIN"
+        """Exactly 40% should be LEGITIMATE not UNCERTAIN."""
+        assert get_verdict(0.40) == "LEGITIMATE"
 
 
 # SIGNAL DETECTION TESTS ---------------------------------------------------------

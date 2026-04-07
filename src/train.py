@@ -29,27 +29,34 @@ if "text" not in df.columns or "label" not in df.columns:
 df = df.dropna(subset=["text", "label"])
 print(f"  {len(df)} emails loaded ({df['label'].sum()} phishing, {(df['label']==0).sum()} legitimate)")
 
-
 # EXTRACT FEATURES ----------------------------------------------------------------
 
 URGENCY_KEYWORDS = [
     "urgent", "immediately", "suspended", "verify", "expire",
     "act now", "limited time", "account locked", "unusual activity",
-    "confirm your", "click here", "update your", "validate"
+    "confirm your", "click here", "update your", "validate", "asap", 
+    "last chance", "within 24 hours", "final notice", "required action", 
+    "attention required"
 ]
 
 CREDENTIAL_KEYWORDS = [
     "password", "username", "login", "sign in", "credentials",
-    "social security", "bank account", "credit card", "ssn"
+    "social security", "bank account", "credit card", "ssn", "pin",
+    "account number", "security question", "verification code",
+    "otp", "one-time password", "2fa", "two-factor authentication",
+    "security code", "cvv", "card number", "routing number", 
+    "account details"
 ]
 
 THREAT_KEYWORDS = [
     "terminated", "legal action", "lawsuit", "permanently",
-    "disabled", "unauthorized", "fraud", "violation"
+    "disabled", "unauthorized", "fraud", "violation", "suspend",
+    "restrict", "compromised", "breach", "data leak", "identity theft",
+    "account closure", "legal consequences", "report to authorities",
+    "blocked", "deactivated", "penalty", "fine", "prosecution"
 ]
 
-SUSPICIOUS_TLDS = [".xyz", ".top", ".club", ".info", ".online", ".site", ".tk"]
-
+SUSPICIOUS_TLDS = [".xyz", ".top", ".club", ".info", ".online", ".site", ".tk", ".ru", ".cn", ".pw", ".gq", ".ml", ".cf"]
 
 def extract_features(text):
     """
@@ -59,84 +66,78 @@ def extract_features(text):
     if not isinstance(text, str):
         text = ""
 
+    # Sets all text to lowercase, and extract any URLs for feature extraction
     text_lower = text.lower()
-    urls = re.findall(r'http[s]?://\S+', text_lower)
+    urls = [url.strip() for url in re.findall(r'http[s]?://[^\s)>\].,]+', text_lower)]
 
-    # Feature 1 — urgency keywords present
-    has_urgency = int(any(kw in text_lower for kw in URGENCY_KEYWORDS))
+    # Feature 1, Extract Urgency Keywords
+    has_urgency = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in URGENCY_KEYWORDS))
 
-    # Feature 2 — credential keywords present
-    has_credentials = int(any(kw in text_lower for kw in CREDENTIAL_KEYWORDS))
+    # Feature 2, Extract Credential Keywords
+    has_credentials = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in CREDENTIAL_KEYWORDS))
 
-    # Feature 3 — number of URLs in the email
+    # Feature 3, Extract URL count
     url_count = len(urls)
 
-    # Feature 4 — suspicious top-level domain in any URL
-    has_suspicious_tld = int(any(tld in url for url in urls for tld in SUSPICIOUS_TLDS))
+    # Feature 4, Extract suspicious top-level domain in any URL
+    has_suspicious_tld = int(any(url.endswith(tld) or f"{tld}/" in url for url in urls for tld in SUSPICIOUS_TLDS))
 
-    # Feature 5 — sender domain mismatch (display name vs domain)
-    # Looks for patterns like "PayPal <support@paypa1.com>"
-    has_domain_mismatch = int(bool(re.search(
-        r'[\w\s]+<[^>]+@(?!.*(?:gmail|yahoo|outlook|hotmail))[^>]+>', text_lower
-    )))
+    # Feature 5, Extract custom domain sender (Emails that are not gmail, yahoo, outlook, or hotmail)
+    has_custom_domain_sender = int(bool(re.search(r'[\w\s]+<[^>]+@(?!gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)[^>]+>', text_lower ))) 
 
-    # Feature 6 — URL uses raw IP address instead of domain
-    has_ip_url = int(bool(re.search(r'http[s]?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', text_lower)))
+    # Feature 6, Extract raw IP address in any URL
+    has_ip_url = int(bool(re.search(r'http[s]?://(?:\d{1,3}\.){3}\d{1,3}', text_lower )))
 
-    # Feature 7 — exclamation mark count (urgency signal)
-    exclamation_count = text.count("!")
+    # Feature 7, Extract exclamation mark count, Cap at 3 to prevent over reliance
+    exclamation_count = min(text.count("!"), 3)
 
-    # Feature 8 — threat keywords present
-    has_threats = int(any(kw in text_lower for kw in THREAT_KEYWORDS))
+    # Feature 8, Extract threat keywords present
+    has_threats = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in THREAT_KEYWORDS))
 
     return [
         has_urgency,
         has_credentials,
         url_count,
         has_suspicious_tld,
-        has_domain_mismatch,
+        has_custom_domain_sender,
         has_ip_url,
         exclamation_count,
         has_threats,
     ]
-
 
 print("Extracting features...")
 X = df["text"].apply(extract_features).tolist()
 y = df["label"].tolist()
 print("  Features extracted for all emails.")
 
-
 # TRAIN TEST SPLIT ------------------------------------------------------------------
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,      # 80% train, 20% test
-    random_state=42,    # fixed seed — same split every run
+    random_state=42,    # fixed seed, same split every run
     stratify=y          # keeps phishing/legit ratio equal in both sets
 )
 
 print(f"\nSplit: {len(X_train)} training emails, {len(X_test)} test emails")
 
-
 # TRAIN THE MODEL ------------------------------------------------------------------
 
 print("\nTraining Random Forest classifier...")
 model = RandomForestClassifier(
-    n_estimators=100,   # 100 decision trees
-    max_depth=10,       # prevents overfitting on small dataset
+    n_estimators=300,   # 300 decision trees
+    max_depth=15,       # prevents overfitting on small dataset
     random_state=42
 )
 model.fit(X_train, y_train)
 print("  Training complete.")
-
 
 # EVALUATE THE MODEL ----------------------------------------------------------------
 
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-print("\n── Evaluation Results ──────────────────────────────")
+print("\n-- Evaluation Results ---------------------------------------------")
 print(f"  Accuracy:  {accuracy * 100:.1f}%")
 print("\n  Classification Report:")
 print(classification_report(y_test, y_pred, target_names=["Legitimate", "Phishing"]))
@@ -157,7 +158,6 @@ print("  Feature Importance (for report):")
 for name, score in sorted(zip(feature_names, importances), key=lambda x: x[1], reverse=True):
     bar = "█" * int(score * 40)
     print(f"    {name:<25} {bar} {score:.3f}")
-
 
 # SAVE THE MODEL ------------------------------------------------------------------
 

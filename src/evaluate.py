@@ -3,11 +3,12 @@ PhishDetect - evaluate.py
 CS 455 - Spring 2026
 
 Automatically selects 20 evaluation emails (11 phishing, 9 legitimate)
-from emails.csv and runs them through the trained model.
+from evaluation_emails.csv and runs them through the trained model.
 Outputs a results table you can copy into your report.
 """
 
 import os
+import re
 import sys
 import joblib 
 import pandas as pd
@@ -17,12 +18,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 from main import extract_features, get_verdict
 
-# ── PATHS ─────────────────────────────────────────────────────────────────────
+# PATHS -----------------------------------------------------------------------
 
-DATA_PATH  = os.path.join(os.path.dirname(__file__), "..", "data", "emails.csv")
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetect.pkl")
+DATA_PATH  = os.path.join(os.path.dirname(__file__), "..", "data", "evaluation_emails.csv")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetect_calibrated.pkl")
 
-# ── LOAD DATA AND MODEL ───────────────────────────────────────────────────────
+# LOAD DATA AND MODEL -------------------------------------------------------
 
 df    = pd.read_csv(DATA_PATH)
 model = joblib.load(MODEL_PATH)
@@ -32,10 +33,10 @@ phishing  = df[df["label"] == 1].sample(n=11, random_state=42)
 legit     = df[df["label"] == 0].sample(n=9,  random_state=42)
 test_df   = pd.concat([phishing, legit]).reset_index(drop=True)
 
-# ── RUN EVALUATION ────────────────────────────────────────────────────────────
+# RUN EVALUATION ----------------------------------------------------------------
 
 print("\n" + "=" * 75)
-print("  PhishDetect — Evaluation Results")
+print("  PhishDetect - Evaluation Results")
 print("=" * 75)
 print(f"  {'#':<4} {'Actual':<12} {'Predicted':<12} {'Confidence':<12} {'Correct':<8} Preview")
 print("-" * 75)
@@ -59,7 +60,7 @@ for i, row in test_df.iterrows():
     is_correct    = (actual_label == 1 and verdict == "PHISHING") or \
                     (actual_label == 0 and verdict == "LEGITIMATE")
     correct_str   = "✅" if is_correct else "❌"
-    preview       = str(text)[:35].replace("\n", " ") + "..."
+    preview       = re.sub(r'\s+', ' ', str(text))[:35] + "..."
 
     if is_correct:
         correct += 1
@@ -83,7 +84,7 @@ for i, row in test_df.iterrows():
         "Preview":      preview
     })
 
-# ── SUMMARY METRICS ───────────────────────────────────────────────────────────
+# SUMMARY METRICS ----------------------------------------------------------------
 
 accuracy  = correct / len(test_df)
 precision = tp / (tp + fp) if (tp + fp) > 0 else 0
@@ -105,8 +106,8 @@ print(f"  ┌──────────────────────�
 print(f"  │              Predicted      │")
 print(f"  │         Phishing  Legit     │")
 print(f"  │ Actual                      │")
-print(f"  │ Phishing   {tp:<6}   {fn:<6}   │")
-print(f"  │ Legit      {fp:<6}   {tn:<6}   │")
+print(f"  │ Phishing   {tp:<6}   {fn:<6}  │")
+print(f"  │ Legit      {fp:<6}   {tn:<6}  │")
 print(f"  └─────────────────────────────┘")
 print(f"\n  TP={tp}  TN={tn}  FP={fp}  FN={fn}")
 
