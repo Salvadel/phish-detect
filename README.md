@@ -23,12 +23,12 @@ PhishDetect takes a pasted email, extracts a set of features (urgency keywords, 
 | Metric | Score |
 |--------|-------|
 | Training Accuracy | 70.0% |
-| Evaluation Accuracy | 90.0% |
+| Evaluation Accuracy | 85.0% |
 | Precision | 1.00 |
 | Recall | 0.82 |
 | F1 Score | 0.90 |
 
-Evaluated against 30 emails entirely separate from the training dataset. Zero false positives - no legitimate emails were incorrectly flagged as phishing.
+Evaluated against 30 emails entirely separate from the training dataset. 
 
 ## Project Structure
 
