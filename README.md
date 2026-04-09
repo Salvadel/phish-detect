@@ -31,9 +31,7 @@ PhishDetect takes a pasted email, extracts a set of features (urgency keywords, 
 | Recall | 1.00 |
 | F1 Score | 0.97 |
 
-Evaluated against 30 emails entirely separate from the training dataset.  
-
-Evaluated against 30 emails entirely separate from the training dataset.  
+Evaluated against 30 emails entirely separate from the training dataset. 15 phishing emails, and 15 valid emails.
 
 ## Project Structure
 
