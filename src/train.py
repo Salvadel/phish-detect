@@ -11,8 +11,6 @@ import re
 import pandas as pd
 import joblib
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
 
 # LOAD THE DATASET -------------------------------------------------------------
 
@@ -20,7 +18,7 @@ DATA_PATH  = os.path.join(os.path.dirname(__file__), "..", "data", "emails.csv")
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetect.pkl")
 
 print("Loading dataset...")
-df = pd.read_csv(DATA_PATH)
+df = pd.read_csv(DATA_PATH, encoding='latin-1')
 
 # Ensure expected columns exist
 if "text" not in df.columns or "label" not in df.columns:
@@ -68,7 +66,7 @@ def extract_features(text):
 
     # Sets all text to lowercase, and extract any URLs for feature extraction
     text_lower = text.lower()
-    urls = [url.strip() for url in re.findall(r'http[s]?://[^\s)>\].,]+', text_lower)]
+    urls = [url.strip() for url in re.findall(r'http[s]?://\S+', text_lower)]
 
     # Feature 1, Extract Urgency Keywords
     has_urgency = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in URGENCY_KEYWORDS))
@@ -83,10 +81,10 @@ def extract_features(text):
     has_suspicious_tld = int(any(url.endswith(tld) or f"{tld}/" in url for url in urls for tld in SUSPICIOUS_TLDS))
 
     # Feature 5, Extract custom domain sender (Emails that are not gmail, yahoo, outlook, or hotmail)
-    has_custom_domain_sender = int(bool(re.search(r'[\w\s]+<[^>]+@(?!gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)[^>]+>', text_lower ))) 
+    has_custom_domain_sender = int(bool(re.search(r'[\w\s]+<[^>]+@(?!gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)[^>]+>', text_lower)))
 
     # Feature 6, Extract raw IP address in any URL
-    has_ip_url = int(bool(re.search(r'http[s]?://(?:\d{1,3}\.){3}\d{1,3}', text_lower )))
+    has_ip_url = int(bool(re.search(r'http[s]?://(?:\d{1,3}\.){3}\d{1,3}', text_lower)))
 
     # Feature 7, Extract exclamation mark count, Cap at 3 to prevent over reliance
     exclamation_count = min(text.count("!"), 3)
@@ -110,39 +108,20 @@ X = df["text"].apply(extract_features).tolist()
 y = df["label"].tolist()
 print("  Features extracted for all emails.")
 
-# TRAIN TEST SPLIT ------------------------------------------------------------------
+# DATASET SUMMARY ---------------------------------------------------------------
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,      # 80% train, 20% test
-    random_state=42,    # fixed seed, same split every run
-    stratify=y          # keeps phishing/legit ratio equal in both sets
-)
+total     = len(df)
+phishing  = int(df['label'].sum())
+legit     = int((df['label'] == 0).sum())
+pct_phish = phishing / total * 100
+pct_legit = legit / total * 100
 
-print(f"\nSplit: {len(X_train)} training emails, {len(X_test)} test emails")
+print(f"\n-- Dataset Summary ------------------------------------------------")
+print(f"  Total emails     : {total}")
+print(f"  Phishing (1)     : {phishing} ({pct_phish:.1f}%)")
+print(f"  Legitimate (0)   : {legit} ({pct_legit:.1f}%)")
 
-# TRAIN THE MODEL ------------------------------------------------------------------
-
-print("\nTraining Random Forest classifier...")
-model = RandomForestClassifier(
-    n_estimators=300,   # 300 decision trees
-    max_depth=15,       # prevents overfitting on small dataset
-    random_state=42
-)
-model.fit(X_train, y_train)
-print("  Training complete.")
-
-# EVALUATE THE MODEL ----------------------------------------------------------------
-
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-
-print("\n-- Evaluation Results ---------------------------------------------")
-print(f"  Accuracy:  {accuracy * 100:.1f}%")
-print("\n  Classification Report:")
-print(classification_report(y_test, y_pred, target_names=["Legitimate", "Phishing"]))
-
-# Feature importance
+# Features 
 feature_names = [
     "urgency_keywords",
     "credential_keywords",
@@ -153,15 +132,42 @@ feature_names = [
     "exclamation_count",
     "threat_keywords",
 ]
+
+import numpy as np
+X_arr = np.array(X)
+
+print(f"\n-- Feature Coverage (% of emails that trigger each feature) -------")
+for i, name in enumerate(feature_names):
+    col = X_arr[:, i]
+    # url_count and exclamation_count are numeric, treat > 0 as triggered
+    triggered = int(np.sum(col > 0))
+    pct = triggered / total * 100
+    bar = "█" * int(pct / 2.5)
+    print(f"  {name:<25} {bar:<40} {triggered:>3}/{total} ({pct:.1f}%)")
+
+# TRAIN THE MODEL ---------------------------------------------------------------
+
+print(f"\nTraining Random Forest classifier on all {total} emails...")
+model = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=10,
+    random_state=42
+)
+model.fit(X, y)
+print("  Training complete.")
+
+# FEATURE IMPORTANCE ------------------------------------------------------------
+
 importances = model.feature_importances_
-print("  Feature Importance (for report):")
+print(f"\n-- Feature Importance ------------------------------------------------")
 for name, score in sorted(zip(feature_names, importances), key=lambda x: x[1], reverse=True):
     bar = "█" * int(score * 40)
-    print(f"    {name:<25} {bar} {score:.3f}")
+    print(f"  {name:<25} {bar:<40} {score:.3f}")
 
-# SAVE THE MODEL ------------------------------------------------------------------
+# SAVE THE MODEL ----------------------------------------------------------------
 
 os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
 joblib.dump(model, MODEL_PATH)
 print(f"\nModel saved to: {MODEL_PATH}")
+print("Run python src/evaluate.py for metrics and evaluation results.")
 print("Run python src/main.py to classify emails.")

@@ -25,12 +25,12 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetec
 
 # LOAD DATA AND MODEL -------------------------------------------------------
 
-df    = pd.read_csv(DATA_PATH)
+df    = pd.read_csv(DATA_PATH, encoding='latin-1')
 model = joblib.load(MODEL_PATH)
 
 # Sample 11 phishing and 9 legitimate emails
-phishing  = df[df["label"] == 1].sample(n=11, random_state=42)
-legit     = df[df["label"] == 0].sample(n=9,  random_state=42)
+phishing  = df[df["label"] == 1].sample(n=15, random_state=42)
+legit     = df[df["label"] == 0].sample(n=15,  random_state=42)
 test_df   = pd.concat([phishing, legit]).reset_index(drop=True)
 
 # RUN EVALUATION ----------------------------------------------------------------

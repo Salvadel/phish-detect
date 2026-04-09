@@ -21,7 +21,7 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetec
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "phishdetect_calibrated.pkl")
 
 # LOAD DATA AND MODEL -------------------------------------------------------
-df = pd.read_csv(DATA_PATH)
+df = pd.read_csv(DATA_PATH, encoding='latin-1')
 model = joblib.load(MODEL_PATH)
 
 # CIONVERT EMAILS TO FEATURES ----------------------------------------------------------------

@@ -52,7 +52,7 @@ def extract_features(text):
         text = ""
 
     text_lower = text.lower()
-    urls = [url.strip() for url in re.findall(r'http[s]?://[^\s)>\].,]+', text_lower)]
+    urls = [url.strip() for url in re.findall(r'http[s]?://\S+', text_lower)]
 
     has_urgency         = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in URGENCY_KEYWORDS))
     has_credentials     = int(any(re.search(rf'\b{re.escape(kw)}\b' if " " not in kw else re.escape(kw), text_lower) for kw in CREDENTIAL_KEYWORDS))
