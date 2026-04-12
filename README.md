@@ -139,6 +139,10 @@ Signals detected:
 Confidence: 87.0% - Verdict: PHISHING
 ```
 
+## Demo
+
+[![PhishDetect Demo](https://img.youtube.com/vi/QT1IzPEqjqU/0.jpg)](https://youtu.be/QT1IzPEqjqU?si=z4khsTmSZTPweX4u)
+
 ## Features Used by the Classifier
 
 The model is trained on 8 hand-engineered features extracted from raw email text:
