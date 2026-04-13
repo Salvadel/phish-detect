@@ -1,8 +1,5 @@
 # PhishDetect
 
-> CS 455 – Artificial Intelligence | Spring 2026  
-> Embry-Riddle Aeronautical University – Daytona Beach
-
 A proof-of-concept machine learning classifier that analyzes email content to determine the likelihood that it is a phishing attempt. Built as an academic exploration of applying supervised learning to a real-world cybersecurity problem.
 
 >**Scope note:** This is a proof-of-concept project built for educational purposes. It is not intended for production use or as a replacement for enterprise security tools.
