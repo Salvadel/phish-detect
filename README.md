@@ -59,7 +59,7 @@ phish-detect/
     └── test_classifier.py   # 23 feature tests - all passing
 ```
 
-> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/) &nbsp;·&nbsp; [`report/`](report/)
+> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/)
 
 ## How to Run
 
