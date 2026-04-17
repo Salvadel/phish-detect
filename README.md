@@ -7,7 +7,7 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 ## Team Members
 
 | Name | GitHub Handle |
-|------|--------------|
+|------|--------------| 
 | Salvatore DeLuca | @Salvas |
 | Devin Catledge | @cadetpenguin359 |
 | Logan Velvet | @LoganVelvet |
