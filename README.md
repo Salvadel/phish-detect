@@ -37,7 +37,6 @@ phish-detect/
 │
 ├── README.md
 ├── LICENSE
-├── .gitignore
 ├── requirements.txt
 │
 ├── src/
