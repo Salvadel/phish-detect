@@ -119,7 +119,7 @@ Paste your email content when prompted, type `END` on a new line, and the classi
 
 ## Example Output
 
-![PhishDetect Running in Terminal](https://imgur.com/gallery/phishdetect-zTp7pAr)
+![PhishDetect Running in Terminal](https://imgur.com/gallery/phishdetect-zTp7pAr#EqUhu29)
 
 ## Demo
 
