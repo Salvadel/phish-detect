@@ -121,6 +121,8 @@ Paste your email content when prompted, type `END` on a new line, and the classi
 
 ![PhishDetect Running in Terminal](https://imgur.com/gallery/phishdetect-zTp7pAr#EqUhu29)
 
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/zTp7pAr"  ><a href="//imgur.com/a/zTp7pAr">PhishDetect</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
 ## Demo
 
 [![PhishDetect Demo](https://img.youtube.com/vi/QT1IzPEqjqU/0.jpg)](https://youtu.be/QT1IzPEqjqU?si=z4khsTmSZTPweX4u)
