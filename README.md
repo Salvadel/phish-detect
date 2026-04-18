@@ -119,22 +119,7 @@ Paste your email content when prompted, type `END` on a new line, and the classi
 
 ## Example Output
 
-```
-=== PhishDetect ===
-Paste email content below (type END on a new line when done):
-
-Dear user, your account will be suspended. Click here to verify immediately.
-END
-
-Analyzing...
-
-Signals detected:
-  · Urgency keywords found
-  · Credential keywords found
-  · Suspicious URL count: 1
-
-Confidence: 87.0% - Verdict: PHISHING
-```
+![PhishDetect Running in Terminal](https://imgur.com/a/zTp7pAr)
 
 ## Demo
 
@@ -159,8 +144,8 @@ The model is trained on 8 hand-engineered features extracted from raw email text
 
 Training and evaluation data sourced from two verified datasets:
 
-- **[Nazario Phishing Corpus](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset)** - verified real-world phishing emails
-- **[Enron Email Dataset](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset)** - legitimate business emails
+- **[Nazario Phishing Corpus](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset?select=Nazario.csv)** - verified real-world phishing emails
+- **[Enron Email Dataset](https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset?select=Enron.csv)** - legitimate business emails
 
 Training set: 100 emails (55 phishing, 45 legitimate)
 Evaluation set: 30 emails (15 phishing, 15 legitimate) - no overlap with training data
