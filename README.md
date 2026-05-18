@@ -118,11 +118,17 @@ Paste your email content when prompted, type `END` on a new line, and the classi
 
 ## Example Output
 
-![PhishDetect Running in Terminal](https://i.imgur.com/EqUhu29.png)
+<p align="center">
+  <img src="https://i.imgur.com/EqUhu29.png" alt="PhishDetect Running in Terminal">
+</p>
 
 ## Demo
 
-[![PhishDetect Demo](https://img.youtube.com/vi/QT1IzPEqjqU/0.jpg)](https://youtu.be/QT1IzPEqjqU?si=z4khsTmSZTPweX4u)
+<p align="center">
+  <a href="https://youtu.be/QT1IzPEqjqU?si=z4khsTmSZTPweX4u">
+    <img src="https://img.youtube.com/vi/QT1IzPEqjqU/0.jpg" alt="PhishDetect Demo">
+  </a>
+</p>
 
 ## Features Used by the Classifier
 
