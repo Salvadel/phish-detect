@@ -8,9 +8,9 @@ A proof-of-concept machine learning classifier that analyzes email content to de
 
 | Name | GitHub Handle |
 |------|--------------| 
-| Salvatore DeLuca | @Salvas |
-| Devin Catledge | @cadetpenguin359 | 
-| Logan Velvet | @LoganVelvet |
+| Salvatore DeLuca | [@Salvas](https://github.com/Salvadel) |
+| Devin Catledge | [@cadetpenguin359](https://github.com/cadetpenguin359) | 
+| Logan Velvet | [@LoganVelvet](https://github.com/LoganVelvet) |
 
 ## What It Does
 
