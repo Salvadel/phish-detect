@@ -122,7 +122,7 @@ Paste your email content when prompted, type `END` on a new line, and the classi
   <img src="https://i.imgur.com/EqUhu29.png" alt="PhishDetect Running in Terminal">
 </p>
 
-## Demo
+## Demo Video
 
 <p align="center">
   <a href="https://youtu.be/QT1IzPEqjqU?si=z4khsTmSZTPweX4u">
