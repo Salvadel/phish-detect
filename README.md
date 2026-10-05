@@ -19,47 +19,6 @@ PhishDetect takes a pasted email, extracts a set of features (urgency keywords, 
 - The **UNCERTAIN** verdict is based on a probability range of **41–60%**, which can be adjusted for stricter or more lenient classifications.  
 - The model uses **probability calibration** to produce more reliable confidence scores, improving evaluation consistency.
 
-## Results
-
-| Metric | Score |
-|--------|-------|
-| Evaluation Accuracy | 90.0% |
-| Precision | 0.93 |
-| Recall | 1.00 |
-| F1 Score | 0.97 |
-
-Evaluated against 30 emails entirely separate from the training dataset. 15 phishing emails, and 15 valid emails.
-
-## Project Structure
-
-```
-phish-detect/
-│
-├── README.md
-├── LICENSE
-├── requirements.txt
-│
-├── src/
-│   ├── main.py          # Entry point - feature extraction and prediction
-│   ├── train.py         # One-time training script, generates phishdetect.pkl
-│   └── calibration.py   # Calibrates the Random Forest model
-│   └── evaluate.py      # Runs evaluation against held-out test emails
-│
-├── data/
-│   ├── emails.csv               # 100 labeled training emails
-│   ├── evaluation_emails.csv    # 30 held-out evaluation emails
-│   ├── evaluation_results.csv   # Results from evaluate.py
-│
-├── models/
-│   └── phishdetect.pkl              # Trained Random Forest model
-│   └── phishdetect_calibrated.pkl   # Calibrated model
-│
-└── tests/
-    └── test_classifier.py   # 23 feature tests - all passing
-```
-
-> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/)
-
 ## How to Run
 
 ### Prerequisites
@@ -129,6 +88,48 @@ Paste your email content when prompted, type `END` on a new line, and the classi
     <img src="https://img.youtube.com/vi/QT1IzPEqjqU/0.jpg" alt="PhishDetect Demo">
   </a>
 </p>
+
+## Results
+
+| Metric | Score |
+|--------|-------|
+| Evaluation Accuracy | 90.0% |
+| Precision | 0.93 |
+| Recall | 1.00 |
+| F1 Score | 0.97 |
+
+Evaluated against 30 emails entirely separate from the training dataset. 15 phishing emails, and 15 valid emails.
+
+## Project Structure
+
+```
+phish-detect/
+│
+├── README.md
+├── LICENSE
+├── requirements.txt
+│
+├── src/
+│   ├── main.py          # Entry point - feature extraction and prediction
+│   ├── train.py         # One-time training script, generates phishdetect.pkl
+│   └── calibration.py   # Calibrates the Random Forest model
+│   └── evaluate.py      # Runs evaluation against held-out test emails
+│
+├── data/
+│   ├── emails.csv               # 100 labeled training emails
+│   ├── evaluation_emails.csv    # 30 held-out evaluation emails
+│   ├── evaluation_results.csv   # Results from evaluate.py
+│
+├── models/
+│   └── phishdetect.pkl              # Trained Random Forest model
+│   └── phishdetect_calibrated.pkl   # Calibrated model
+│
+└── tests/
+    └── test_classifier.py   # 23 feature tests - all passing
+```
+
+> [`src/`](src/) &nbsp;·&nbsp; [`data/`](data/) &nbsp;·&nbsp; [`models/`](models/)
+
 
 ## Features Used by the Classifier
 
